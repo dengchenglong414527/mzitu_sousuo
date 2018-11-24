@@ -10,12 +10,12 @@ class WgSpider(scrapy.Spider):
     name = 'wg'
     allowed_domains = []
     # start_urls = ['http://www.mmjpg.com/']
-    start_urls = ['https://www.mzitu.com/search/%E9%99%86%E6%A2%93%E7%90%AA/']
+    start_urls = ['https://www.mzitu.com/search/%E9%99%8C%E5%AD%90/']
 
     # 指定接着爬取的url
     # page = 1
     # url = 'http://www.mmjpg.com/home/{}'
-
+    urlnumber = 1
     def parse(self, response):
         # urllist = response.xpath('//div[@class="pic"]//li/a/@href').extract()
         urllist = response.xpath('//div[@class="postlist"]//li/a/@href').extract()
@@ -65,17 +65,16 @@ class WgSpider(scrapy.Spider):
         yield scrapy.Request(url=img,meta={'title':title} ,callback=self.download_c)
 
     def download_c(self,response):
-        dirpath = r'C:\Users\dengc\Desktop\MZT_陆梓琪'
+        dirpath = r'B:\MZT'
         if not os.path.exists(dirpath):
             os.mkdir(dirpath)
-        num1 = random.randint(1,10000)
-        num2 = random.randint(1,10000)
-        num3 = num1 + num2
-        img_path = os.path.join(dirpath,response.meta['title']) + str(num3) +  '.jpg'
+
+        # img_path = os.path.join(dirpath,response.meta['title']) + str(num3) +  '.jpg'
+        img_path = os.path.join(dirpath,response.meta['title']) + str(self.urlnumber) +  '.jpg'
 
         # 保存
         with open(img_path, 'wb')as fp:
             fp.write(response.body)
         print('{}--保存完成'.format(img_path))
-
+        self.urlnumber += 1
 
